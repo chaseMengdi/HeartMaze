@@ -1,5 +1,6 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Maze.h"
+#include<stdlib.h>
 
 bool visited[N][M];
 bool mask[N][M];
@@ -13,6 +14,38 @@ int main()
 	initMaze(maze, in, out);
 	findPath(maze, in, out);
 	return 0;
+}
+
+void setCursor(int x, int y)
+{
+	HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD setps;
+	setps.X = x; setps.Y = y;
+	SetConsoleCursorPosition(hCon, setps);
+}
+
+void setColor(int color) {
+	switch (color)
+	{
+	case 1: {//red
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+			FOREGROUND_RED);
+	}break;
+	case 2: {//cyan
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+			FOREGROUND_GREEN |
+			FOREGROUND_BLUE);
+	}break;
+	case 3: {//white
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),
+			FOREGROUND_RED |
+			FOREGROUND_GREEN |
+			FOREGROUND_BLUE |
+			FOREGROUND_INTENSITY);
+	}break;
+	default:
+		break;
+	}
 }
 
 void initMaze(Maze maze[N][M], Block &in, Block &out)
@@ -102,9 +135,11 @@ void findPath(Maze maze[N][M], Block in, Block out)
 
 			if (curBlockX == out.x&&curBlockY == out.y)
 			{
-				printf("\n寻路成功\n共%d步", step);
+				setColor(3);
+				printf("\n寻路成功\n共%d步\n", step);
 				Sleep(5000);
-				system("cls");
+				//system("cls");
+				system("pause");
 				return;
 			}
 			curBlockX = nextBlockX(block.x, block.di);
@@ -132,7 +167,8 @@ void findPath(Maze maze[N][M], Block in, Block out)
 			}
 		}
 	} while (!isEmpty(S));
-	printf("寻路失败");
+	setColor(3);
+	printf("\n寻路失败\n");
 }
 
 void initBlock(Block &block, int x, int y, int di)
@@ -148,28 +184,53 @@ void showBlock(Maze maze[N][M])
 	{
 		for (int j = 0; j < M; j++)
 		{
-			if (mask[i][j] == true)
+			if (mask[i][j] == true) {
+				setColor(3);
 				printf("  ");
-			else if (maze[i][j] == INWALL)
+			}
+				
+			else if (maze[i][j] == INWALL) {
+				setColor(1);
 				printf("█");
-			else if (maze[i][j] == OUTWALL)
+			}
+				
+			else if (maze[i][j] == OUTWALL) {
+				setColor(1);
 				printf("█");
-			else if (maze[i][j] == EMPTYWALL)
+			}
+			else if (maze[i][j] == EMPTYWALL) {
+				setColor(3);
 				printf("  ");
-			else if (maze[i][j] == ROAD)
+			}
+			else if (maze[i][j] == ROAD) {
+				setColor(3);
 				printf("  ");
-			else if (maze[i][j] == BACK)
+			}
+			else if (maze[i][j] == BACK) {
+				setColor(2);
 				printf("□");
-			else if (maze[i][j] == EAST)
+			}
+			else if (maze[i][j] == EAST) {
+				setColor(3);
 				printf("→");
-			else if (maze[i][j] == SOUTH)
+			}
+			else if (maze[i][j] == SOUTH) {
+				setColor(3);
 				printf("↓");
-			else if (maze[i][j] == WEST)
+			}
+			else if (maze[i][j] == WEST) {
+				setColor(3);
 				printf("←");
-			else if (maze[i][j] == NORTH)
+			}
+			else if (maze[i][j] == NORTH) {
+				setColor(3);
 				printf("↑");
-			if (j != 0 && j % (M - 1) == 0)
+			}
+			if (j != 0 && j % (M - 1) == 0) {
+				setColor(3);
 				printf("\n");
+			}
+				
 		}
 	}
 }
@@ -187,14 +248,14 @@ int nextBlockX(int a, int di)
 	int x = a;
 	switch (di)
 	{
-		case SOUTH:
-			x++;
-			break;
-		case NORTH:
-			x--;
-			break;
-		default:
-			break;
+	case SOUTH:
+		x++;
+		break;
+	case NORTH:
+		x--;
+		break;
+	default:
+		break;
 	}
 	return x;
 }
@@ -204,15 +265,15 @@ int nextBlockY(int b, int di)
 	int y = b;
 	switch (di)
 	{
-		case EAST:
-			y++;
-			break;
+	case EAST:
+		y++;
+		break;
 
-		case WEST:
-			y--;
-			break;
-		default:
-			break;
+	case WEST:
+		y--;
+		break;
+	default:
+		break;
 	}
 	return y;
 }
